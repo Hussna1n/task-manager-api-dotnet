@@ -31,8 +31,8 @@ public class TaskItem
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public string Status { get; set; } = "Todo";
-    public string Priority { get; set; } = "Medium";
+    public string Status { get; set; } = "Todo"; // Todo, InProgress, Review, Done
+    public string Priority { get; set; } = "Medium"; // Low, Medium, High, Critical
     public DateTime? DueDate { get; set; }
     public int ProjectId { get; set; }
     public Project Project { get; set; } = null!;
@@ -59,6 +59,6 @@ public class ProjectMember
     public Project Project { get; set; } = null!;
     public int UserId { get; set; }
     public User User { get; set; } = null!;
-    public string Role { get; set; } = "Member";
+    public string Role { get; set; } = "Member"; // Owner, Admin, Member
     public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
 }
