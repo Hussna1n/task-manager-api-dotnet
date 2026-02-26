@@ -11,9 +11,26 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<ProjectMember> ProjectMembers => Set<ProjectMember>();
 
-    protected override void OnModelCreating(ModelBuilder mb)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        mb.Entity<ProjectMember>().HasKey(pm => new { pm.ProjectId, pm.UserId });
-        mb.Entity<User>().HasIndex(u => u.Email).IsUnique();
+        builder.Entity<ProjectMember>()
+            .HasKey(pm => new { pm.UserId, pm.ProjectId });
+
+        builder.Entity<Project>()
+            .HasOne(p => p.Owner)
+            .WithMany(u => u.OwnedProjects)
+            .HasForeignKey(p => p.OwnerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<TaskItem>()
+            .HasOne(t => t.Assignee)
+            .WithMany(u => u.AssignedTasks)
+            .HasForeignKey(t => t.AssigneeId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Entity<TaskItem>()
+            .Property(t => t.Status).HasDefaultValue("todo");
+        builder.Entity<TaskItem>()
+            .Property(t => t.Priority).HasDefaultValue("medium");
     }
 }
